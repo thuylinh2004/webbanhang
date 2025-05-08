@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi" data-bs-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quản Lý Sản Phẩm</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome cho biểu tượng -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Animate.css cho animation -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header id="header" class="header sticky-top py-3">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo">
+        <h1 class="sitename">Medilab</h1>
+      </a>
+      <nav id="navmenu" class="navmenu">
+        <ul>
+          <li><a href="index.html" class="active">Trang chủ</a></li>
+          <li><a href="management.html">Quản lý sản phẩm</a></li>
+        </ul>
+      </nav>
+      <div class="social-links">
+        <a id="cartButton" class="position-relative" onclick="openCart(event)" style="cursor: pointer;" aria-label="Mở giỏ hàng">
+          <i class="bi bi-cart"></i>
+          <span id="cartCount" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">0</span>
+        </a>
+        <a href="register.html" class="user-icon" title="Đăng nhập/Đăng ký"><i class="bi bi-person"></i></a>
+        <a id="btnLogout" style="cursor: pointer; display: none;">Đăng xuất</a>
+        <button class="btn btn-outline-secondary animate__animated animate__pulse" id="themeToggle" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i> <span>Dark Mode</span>
+        </button>
+      </div>
+    </div>
+  </header>
+  <!-- Container chính -->
+  <div class="container mt-5 animate__animated animate__fadeInUp">
+    <h2 class="text-center mb-4 fw-bolder headerr">Quản Lý Sản Phẩm</h2>
+    <!-- Tìm kiếm và nút thêm -->
+    <div class="d-flex justify-content-between mb-3 align-items-center">
+      <div class="input-group" style="max-width: 300px;">
+        <span class="input-group-text"><i class="fas fa-search"></i></span>
+        <input type="text" class="form-control" id="searchInput" placeholder="Tìm kiếm sản phẩm..." oninput="searchProducts()">
+      </div>
+      <div>
+        <button class="btn btn-accent animate__animated animate__pulse me-2" onclick="openAddProductModal()">
+          <i class="fas fa-plus me-1"></i> Thêm sản phẩm
+        </button>
+      </div>
+    </div>
+    <!-- Bảng sản phẩm -->
+    <div class="table-responsive">
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr>
+            <th>Tên</th>
+            <th>Mô tả</th>
+            <th>Giá</th>
+            <th>Hình ảnh</th>
+            <th>Thời gian tạo</th>
+            <th>Thao tác</th>
+          </tr>
+        </thead>
+        <tbody id="productTableBody"></tbody>
+      </table>
+    </div>
+  </div>
+  <!-- Modal thêm sản phẩm -->
+  <div class="modal fade" id="addProductModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content animate__animated animate__faster animate__zoomIn">
+        <div class="modal-header">
+          <h5 class="modal-title">Thêm sản phẩm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <label for="addProductName" class="form-label">Tên sản phẩm</label>
+            <input type="text" class="form-control" id="addProductName">
+            <div class="text-danger small mt-1" id="addProductNameError" style="display: none;">Vui lòng nhập tên!</div>
+          </div>
+          <div class="mb-3">
+            <label for="addProductDescription" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="addProductDescription"></textarea>
+            <div class="text-danger small mt-1" id="addProductDescriptionError" style="display: none;">Vui lòng nhập mô tả!</div>
+          </div>
+          <div class="mb-3">
+            <label for="addProductPrice" class="form-label">Giá</label>
+            <input type="number" class="form-control" id="addProductPrice">
+            <div class="text-danger small mt-1" id="addProductPriceError" style="display: none;">Vui lòng nhập giá!</div>
+          </div>
+          <div class="mb-3">
+            <label for="addProductImage" class="form-label">Hình ảnh (URL)</label>
+            <input type="url" class="form-control" id="addProductImage">
+            <div class="text-danger small mt-1" id="addProductImageError" style="display: none;">Vui lòng nhập URL!</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-accent" id="addProductBtn" onclick="addProduct()">
+            <span>Thêm</span>
+            <div class="spinner-border spinner-border-sm spinner" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal sửa sản phẩm -->
+  <div class="modal fade" id="editProductModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content animate__animated animate__faster animate__zoomIn">
+        <div class="modal-header">
+          <h5 class="modal-title">Sửa sản phẩm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="editProductId">
+          <div class="mb-3">
+            <label for="editProductName" class="form-label">Tên sản phẩm</label>
+            <input type="text" class="form-control" id="editProductName">
+            <div class="text-danger small mt-1" id="editProductNameError" style="display: none;">Vui lòng nhập tên!</div>
+          </div>
+          <div class="mb-3">
+            <label for="editProductDescription" class="form-label">Mô tả</label>
+            <textarea class="form-control" id="editProductDescription"></textarea>
+            <div class="text-danger small mt-1" id="editProductDescriptionError" style="display: none;">Vui lòng nhập mô tả!</div>
+          </div>
+          <div class="mb-3">
+            <label for="editProductPrice" class="form-label">Giá</label>
+            <input type="number" class="form-control" id="editProductPrice">
+            <div class="text-danger small mt-1" id="editProductPriceError" style="display: none;">Vui lòng nhập giá!</div>
+          </div>
+          <div class="mb-3">
+            <label for="editProductImage" class="form-label">Hình ảnh (URL)</label>
+            <input type="url" class="form-control" id="editProductImage">
+            <div class="text-danger small mt-1" id="editProductImageError" style="display: none;">Vui lòng nhập URL!</div>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+          <button type="button" class="btn btn-accent" id="editProductBtn" onclick="saveEditProduct()">
+            <span>Lưu</span>
+            <div class="spinner-border spinner-border-sm spinner" role="status"></div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Modal xem chi tiết -->
+  <div class="modal fade" id="viewProductModal" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content animate__animated animate__faster animate__zoomIn">
+        <div class="modal-header">
+          <h5 class="modal-title">Chi tiết sản phẩm</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <p><strong>Tên:</strong> <span id="viewProductName"></span></p>
+          <p><strong>Mô tả:</strong> <span id="viewProductDescription"></span></p>
+          <p><strong>Giá:</strong> <span id="viewProductPrice"></span></p>
+          <p><strong>Thời gian tạo:</strong> <span id="viewProductCreatedAt"></span></p>
+          <p><strong>Hình ảnh:</strong></p>
+          <img id="viewProductImage" class="img-fluid rounded" alt="Hình sản phẩm">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- Off-canvas giỏ hàng -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+    <div class="offcanvas-header bg-accent text-white">
+      <h5 class="offcanvas-title" id="cartOffcanvasLabel">Giỏ Hàng</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="cartItems" class="list-group"></div>
+      <div class="cart-footer mt-3">
+        <h6>Tổng tiền: <span id="cartTotal">0 VNĐ</span></h6>
+        <button class="btn btn-accent" onclick="clearCart()">Xóa toàn bộ</button>
+        <button class="btn btn-primary" onclick="alert('Chuyển đến trang thanh toán...')">Thanh Toán Ngay</button>
+      </div>
+    </div>
+  </div>
+  <!-- Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Tải theme.js và management.js -->
+  <script src="theme.js"></script>
+  <script src="management.js"></script>
+</body>
+</html>

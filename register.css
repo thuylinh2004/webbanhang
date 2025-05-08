@@ -1,0 +1,18 @@
+body {
+  background: linear-gradient(45deg, #ffffff, #20409a, #f37423);
+  background-size: 400%;
+  color: var(--default-color);
+  font-family: 'Arial', sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+  animation: gradientShift 15s ease infinite;
+}
+
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}

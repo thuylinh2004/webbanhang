@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta content="width=device-width, initial-scale=1.0" name="viewport">
+  <title>Index</title>
+  <!-- CDN Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,100;0,300;0,400;0,500;0,700;0,900;1,100;1,300;1,400;1,500;1,700;1,900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Raleway:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+  <!-- CDN Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- CDN Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <!-- CDN Animate.css -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+  <link rel="stylesheet" href="main.css">
+</head>
+<body>
+  <header id="header" class="header sticky-top py-3">
+    <div class="container position-relative d-flex align-items-center justify-content-between">
+      <a href="index.html" class="logo">
+        <h1 class="sitename">Medilab</h1>
+      </a>
+      <!-- Nút hamburger menu cho màn hình nhỏ -->
+      <button class="navbar-toggler d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#navbarOffcanvas" aria-controls="navbarOffcanvas" aria-expanded="false" aria-label="Toggle navigation">
+        <i class="bi bi-list"></i>
+      </button>
+      <!-- Menu điều hướng chính (hiển thị trên màn hình lớn) -->
+      <nav id="navmenu" class="navmenu d-none d-lg-block">
+        <ul>
+          <li><a href="index.html" class="active">Trang chủ</a></li>
+          <li><a href="management.html">Quản lý sản phẩm</a></li>
+        </ul>
+      </nav>
+      <!-- Social links (hiển thị trên màn hình lớn) -->
+      <div class="social-links d-none d-lg-flex align-items-center">
+        <a id="cartButton" class="position-relative" onclick="openCart(event)" style="cursor: pointer;" aria-label="Mở giỏ hàng">
+          <i class="bi bi-cart"></i>
+          <span id="cartCount" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">0</span>
+        </a>
+        <a href="register.html" class="user-icon" title="Đăng nhập/Đăng ký"><i class="bi bi-person"></i></a>
+        <a id="btnLogout" style="cursor: pointer; display: none;">Đăng xuất</a>
+        <button class="btn btn-outline-secondary animate__animated animate__pulse" id="themeToggle" onclick="toggleTheme()">
+          <i class="fas fa-moon"></i> <span>Dark Mode</span>
+        </button>
+      </div>
+      <!-- Offcanvas menu cho màn hình nhỏ -->
+      <div class="offcanvas offcanvas-start" tabindex="-1" id="navbarOffcanvas" aria-labelledby="navbarOffcanvasLabel">
+        <div class="offcanvas-header">
+          <h5 class="offcanvas-title" id="navbarOffcanvasLabel">Menu</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+        </div>
+        <div class="offcanvas-body">
+          <!-- Menu điều hướng -->
+          <ul class="navbar-nav">
+            <li class="nav-item">
+              <a class="nav-link" href="index.html">Trang chủ</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="management.html">Quản lý sản phẩm</a>
+            </li>
+          </ul>
+          <!-- Social links trong Offcanvas -->
+          <div class="social-links-offcanvas mt-4">
+            <div class="d-flex align-items-center mb-2">
+              <a id="cartButtonOffcanvas" class="position-relative me-3" onclick="openCart(event)" style="cursor: pointer;" aria-label="Mở giỏ hàng">
+                <i class="bi bi-cart"></i>
+                <span id="cartCountOffcanvas" class="badge bg-danger rounded-pill position-absolute top-0 start-100 translate-middle">0</span>
+              </a>
+              <span>Giỏ hàng</span>
+            </div>
+            <div class="d-flex align-items-center mb-2">
+              <a href="register.html" class="user-icon me-3"><i class="bi bi-person"></i>
+              <span>Đăng nhập/Đăng ký</span></a>
+            </div>
+            <div class="d-flex align-items-center mb-2" id="btnLogoutOffcanvas" style="display: none;">
+              <a class="me-3" style="cursor: pointer;"><i class="bi bi-box-arrow-right"></i>
+              <span>Đăng xuất</span></a>
+            </div>
+            <button class="btn btn-outline-secondary animate__animated animate__pulse" id="themeToggleOffcanvas" onclick="toggleTheme()">
+              <i class="fas fa-moon"></i> <span>Dark Mode</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Section danh sách sản phẩm -->
+  <section class="products-section">
+    <div class="container">
+      <h2>Danh Sách Sản Phẩm</h2>
+      <div class="row" id="productList"></div>
+    </div>
+  </section>
+  <!-- Off-canvas giỏ hàng -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="cartOffcanvas" aria-labelledby="cartOffcanvasLabel">
+    <div class="offcanvas-header bg-accent text-white">
+      <h5 class="offcanvas-title" id="cartOffcanvasLabel">Giỏ Hàng</h5>
+      <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+    </div>
+    <div class="offcanvas-body">
+      <div id="cartItems" class="list-group"></div>
+      <div class="cart-footer mt-3">
+        <h6>Tổng tiền: <span id="cartTotal">0 VNĐ</span></h6>
+        <button class="btn btn-accent" onclick="clearCart()">Xóa toàn bộ</button>
+        <button class="btn btn-primary" onclick="alert('Chuyển đến trang thanh toán...')">Thanh Toán Ngay</button>
+      </div>
+    </div>
+  </div>
+  <!-- CDN Bootstrap JS -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  <!-- Tải theme.js và index.js -->
+  <script src="theme.js"></script>
+  <script src="index.js"></script>
+</body>
+</html>
